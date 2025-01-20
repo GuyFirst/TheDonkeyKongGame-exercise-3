@@ -8,8 +8,8 @@
 
 class Ghost : public Entity {
 public:
-    Ghost(Map* map, int m_id, Point startingPosition)
-        : Entity(startingPosition, 'x', 
+    Ghost(Map* map, int m_id, Point startingPosition, char me)
+        : Entity(startingPosition, me,
             (int)gameConfig::Direction::POSITIVE, (int)gameConfig::Direction::STAY, map), 
         m_id(m_id), 
         startingPosition(startingPosition) {

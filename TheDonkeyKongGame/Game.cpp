@@ -141,14 +141,14 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
         std::vector<Ghost*> ghosts = initializeGhosts(gameBoard);
 		
-		//feel free to delete/comment 144-150 lines to disable the music
+		/*//feel free to delete/comment 144-150 lines to disable the music
         gotoxy(0, 0);
         printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "How High Can You Get?");
         gameBoard.m_playHowHighCanYouGetTheme();
 		gotoxy(0, 0);
 		for (int i = 0; i < strlen("How High Can You Get?"); i++)
 		 std::cout << gameBoard.originalMap[0][i];
-	     Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
+	     Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);*/
         //Game state variables
         int score = (int)gameConfig::Score::STARTING_SCORE;
         int currLives = (int)gameConfig::Size::START_LIVES;
@@ -268,11 +268,11 @@ std::vector<Ghost*> Game::initializeGhosts(Map& gameBoard) {
         // Create Ghost or UniqueGhost based on 'me' value
         if (ghost.me == 'x') {
            
-            ghosts.push_back(new Ghost(&gameBoard, std::rand(), ghost.startPos));
+            ghosts.push_back(new Ghost(&gameBoard, std::rand(), ghost.startPos, ghost.me));
         }
         else {
           
-            ghosts.push_back(new UniqueGhost(&gameBoard, std::rand(), ghost.startPos));
+            ghosts.push_back(new UniqueGhost(&gameBoard, std::rand(), ghost.startPos, ghost.me));
         }
     }
 

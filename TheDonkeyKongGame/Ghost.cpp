@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "gameConfig.h"
+#include "typeinfo"
+#include "UniqueGhost.h"
 
 
 //ok here me out
@@ -20,9 +22,11 @@
 
 void Ghost::move(std::vector<Ghost*>& ghosts) {
     draw(map->originalMap[position.getY()][position.getX()]);
-    // Handle potential collisions or direction changes
-    handleCollision(ghosts);
-    handleDirectionChange();
+    // Only ghosts handle Collisions.
+    if (typeid(*this) == typeid(Ghost)) {
+        handleCollision(ghosts);
+        handleDirectionChange();
+    }
     // Update position 
     if (isOnAir() || isNearBoundry()) {
         m_diff_x = -m_diff_x;
@@ -30,7 +34,7 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
 
     position.setX(position.getX() + m_diff_x);
     // Draw ghost at the new position
-    draw('x');
+    draw(me);
 }
 
 void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {
