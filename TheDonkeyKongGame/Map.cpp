@@ -284,7 +284,7 @@ int Map::load(const std::string& filename) {
     bool foundLegend = false;
 	bool isQCurrRow = false;
     std::vector<ghostType> ghosts;
-
+    Point position;
    
     while (!screen_file.get(c).eof()) {
         if (c == '\n') {
@@ -327,11 +327,15 @@ int Map::load(const std::string& filename) {
                 break;
 
             case 'x':  // Ghost
-                ghosts.emplace_back('x', curr_col, curr_row);
+                position.setX(curr_col);
+                position.setY(curr_row);
+                ghosts.emplace_back('x', position);
                 originalMap[curr_row][curr_col++] = ' ';  // Replace with space
                 break;
             case 'X':  // Ghost
-                ghosts.emplace_back('X', curr_col, curr_row);
+                position.setX(curr_col);
+                position.setY(curr_row);
+                ghosts.emplace_back('X', position);
                 originalMap[curr_row][curr_col++] = ' ';  // Replace with space
                 break;
 

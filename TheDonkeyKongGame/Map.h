@@ -9,7 +9,7 @@
 struct ghostType {
     char me;
     Point startPos;
-    ghostType(char ghostChar, Point start) : me(ghostChar), startPos(start) {}
+    ghostType(char me, Point startPos) : me(me), startPos(startPos) {};
 };
 
 class Map
