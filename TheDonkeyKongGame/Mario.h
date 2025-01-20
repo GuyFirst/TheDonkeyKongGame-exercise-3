@@ -17,7 +17,8 @@ public:
     bool isNearPaulina() const { return map->currentMap[position.getY()][position.getX() + m_diff_x] == '$'; }
     char getMapChar() const    { return map->originalMap[position.getY()][position.getX()]; }
     bool isBarrelHere() const  { return map->currentMap[position.getY()][position.getX()] == 'O'; }
-    bool isGhostHere() const   { return map->currentMap[position.getY()][position.getX()] == 'x'; }
+    bool isGhostHere() const   { return map->currentMap[position.getY()][position.getX()] == 'x' ||
+                                        map->currentMap[position.getY()][position.getX()] == 'X'; }
     bool isNearPatish() const  { return map->originalMap[position.getY()][position.getX()] == 'p'; }
     void setIsNearExplosion(bool isNear) { m_isNearExplosion = isNear; }
 
