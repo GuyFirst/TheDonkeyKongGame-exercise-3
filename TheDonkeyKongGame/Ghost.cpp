@@ -27,6 +27,8 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
         handleCollision(ghosts);
         handleDirectionChange();
     }
+    else
+        followMario();
     // Update position 
     if (isOnAir() || isNearBoundry()) {
         m_diff_x = -m_diff_x;

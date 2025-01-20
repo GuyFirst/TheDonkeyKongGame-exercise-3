@@ -23,6 +23,7 @@ protected:
    
     virtual void climb();
     virtual void downLadder();
+    virtual void followMario();
     bool isNearBoundry() const;
     bool isOnFloor() const;
     bool isUnderLadder() const {

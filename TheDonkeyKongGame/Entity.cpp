@@ -57,3 +57,8 @@ void Entity::downLadder() {
         m_diff_y = 0;
     }
 }
+
+void Entity::followMario()
+{
+    //need implimentation
+}
