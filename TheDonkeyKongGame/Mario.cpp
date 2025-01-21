@@ -9,6 +9,7 @@ void Mario::draw(char ch) const
 {
     gotoxy(position.getX(), position.getY());
     std::cout << ch;
+    //map->currentMap[position.getY()][position.getX()] = ch;
 }
 
 void Mario::move(gameConfig::eKeys key) {

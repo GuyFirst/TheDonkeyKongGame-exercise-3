@@ -22,13 +22,11 @@
 
 void Ghost::move(std::vector<Ghost*>& ghosts) {
     draw(map->originalMap[position.getY()][position.getX()]);
-    // Only ghosts handle Collisions.
-    if (typeid(*this) == typeid(Ghost)) {
+    
         handleCollision(ghosts);
-        handleDirectionChange();
-    }
-    else
-        followMario();
+    //    handleDirectionChange();
+   
+      
     // Update position 
     if (isOnAir() || isNearBoundry()) {
         m_diff_x = -m_diff_x;
@@ -39,23 +37,39 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
     draw(me);
 }
 
+
+//void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {
+//    for (auto& other : ghosts) {
+//        // Skip checking collision with itself
+//        if (other == this) {  
+//            continue;
+//        }
+//
+//        // Check if two ghosts are on the same row 
+//        if (this->position.getY() == other->position.getY()) {
+//            if (other->isNearOtherGhosts()) {
+//                this->m_diff_x = -(this->m_diff_x);
+//                other->m_diff_x = -(other->m_diff_x);
+//            }
+//        }
+//    }
+//}
+
+
 void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {
     for (auto& other : ghosts) {
         // Skip checking collision with itself
-        if (other == this) {  
+        if (other == this) {
             continue;
         }
-
-        // Check if two ghosts are on the same row 
-        if (this->position.getY() == other->position.getY()) {
-            if (other->isNearOtherGhosts()) {
-                this->m_diff_x = -this->m_diff_x;
-                other->m_diff_x = -other->m_diff_x;
-            }
+        
+        if (this->isNearOtherGhosts(*other)) {
+                this->m_diff_x = -(this->m_diff_x);
+                other->m_diff_x = -(other->m_diff_x);
         }
+        
     }
 }
-
 
 
 

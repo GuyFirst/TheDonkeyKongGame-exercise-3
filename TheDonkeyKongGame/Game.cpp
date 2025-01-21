@@ -504,6 +504,7 @@ void Game::lose() const
 
 void Game::moveGhosts(std::vector<Ghost*>& ghosts) {
     for (auto& ghost : ghosts) {
+        
         (*ghost).move(ghosts);
     }
 }
