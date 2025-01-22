@@ -47,7 +47,7 @@ enum class NOTES {
 	BREAK = 0,  // No sound
 };
 
-static constexpr int BPM = 150;
+static constexpr int BPM = 200;
 static constexpr int BEAT_DURATION_MS = 60000 / BPM;
 
 enum class DURATION_IN_MILLISECONDS {
