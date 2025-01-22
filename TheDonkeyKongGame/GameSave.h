@@ -4,6 +4,6 @@
 
 class GameSave : public Game
 {
-	void run();
+	virtual void run();
 };
 

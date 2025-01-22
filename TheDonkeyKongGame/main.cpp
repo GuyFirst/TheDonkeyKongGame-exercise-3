@@ -1,4 +1,6 @@
 ﻿#include "Game.h"
+#include "GameLoad.h"
+#include "GameSave.h"
 
 int main(int argc, char** argv) {
 	bool isLoad = argc > 1 && std::string(argv[1]) == "-load";
@@ -10,7 +12,9 @@ int main(int argc, char** argv) {
 		GameSave game;
 	else
 		Game game;
+
 	game.run();
+
 	return 0;
 }
 

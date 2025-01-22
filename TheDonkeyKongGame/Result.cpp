@@ -25,11 +25,12 @@ void Results::saveResults(const std::string& filename) const {
 	results_file.close();
 }
 
-size_t Results::getNextEvent() const {
-	if (!results.empty) {
-		return results.front();
-	}
-	else return 0; 
+size_t Results::getNextSignificantIteration() const {
+	if (!results.empty() && results.front().second != NO_RESULT && results.front().second != REACH_PAULIN) {
+			return results.front().first;
+		}
+	
+	return 0;
 	// we use the fact that on iteration zero we cannot hit a bomb
 	// to indicate that there isn't any result left with a hit bomb event
 }
