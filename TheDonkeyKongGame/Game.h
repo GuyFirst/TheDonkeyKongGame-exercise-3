@@ -11,7 +11,8 @@
 class Game
 {
 public:
-	void run();
+	virtual void run();
+	virtual char handleUserInput();
 	int startGame(std::vector<std::string>, int index);
 	void pause();
 	void loseALife() const;
@@ -39,7 +40,6 @@ public:
 	Map initializeGameBoard(const std::string& fileName);
 	std::vector<Barrel> initializeBarrels(Map& gameBoard);
 	std::vector<Ghost*>  initializeGhosts(Map& gameBoard);
-	char handleUserInput();
 	void pauseGame(Map& gameBoard,const int currLives);
 	bool handlePatishInteraction(Mario& mario, bool& patishPicked, Map& gameBoard);
 	void handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard);

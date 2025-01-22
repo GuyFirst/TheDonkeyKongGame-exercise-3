@@ -499,6 +499,7 @@ void Game::lose() const
 {
     Map loseScreen;
     loseScreen.lose();
+    
 }
 
 

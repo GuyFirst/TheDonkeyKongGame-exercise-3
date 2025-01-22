@@ -134,11 +134,14 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="gameConfig.h" />
+    <ClInclude Include="GameLoad.h" />
+    <ClInclude Include="GameSave.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Note.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="UniqueGhost.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,10 +149,13 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="gameConfig.cpp" />
+    <ClCompile Include="GameLoad.cpp" />
+    <ClCompile Include="GameSave.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="UniqueGhost.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
