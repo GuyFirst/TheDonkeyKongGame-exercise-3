@@ -20,8 +20,10 @@ public:
 		results.pop_front();
 		return result;
 	}
-	bool A(size_t iteration) const {
+
+	bool isFinishedBy(size_t iteration) const {
 		return results.empty() || results.back().first <= iteration;
 	}
+
 	size_t getNextSignificantIteration() const;
 };

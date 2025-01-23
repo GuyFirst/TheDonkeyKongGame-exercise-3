@@ -15,6 +15,8 @@
 #include "gameConfig.h"
 #include "Ghost.h"
 #include "UniqueGhost.h"
+#include "Steps.h"
+#include "Result.h"
 
 
 void Game::run()
@@ -128,29 +130,28 @@ void Game::hack() const
 			return;
 }
 
+/*//feel free to delete/comment 144-150 lines to disable the music
+        gotoxy(0, 0);
+        printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "How High Can You Get?");
+        gameBoard.m_playHowHighCanYouGetTheme();
+        gotoxy(0, 0);
+        for (int i = 0; i < strlen("How High Can You Get?"); i++)
+         std::cout << gameBoard.originalMap[0][i];
+         Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);*/
+         //Game state variables
 
 int Game::startGame(std::vector<std::string> fileNames, int index) {
     for (int i = index; i < fileNames.size(); i++) {
         ShowConsoleCursor(false);
         gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
+        
         // Initialize game board and objects
         Map gameBoard = initializeGameBoard(fileNames[i]);
         if (!gameBoard.isMapValid()) continue;
-
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
         std::vector<Ghost*> ghosts = initializeGhosts(gameBoard);
-		
-		/*//feel free to delete/comment 144-150 lines to disable the music
-        gotoxy(0, 0);
-        printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "How High Can You Get?");
-        gameBoard.m_playHowHighCanYouGetTheme();
-		gotoxy(0, 0);
-		for (int i = 0; i < strlen("How High Can You Get?"); i++)
-		 std::cout << gameBoard.originalMap[0][i];
-	     Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);*/
-        //Game state variables
-        int score = (int)gameConfig::Score::STARTING_SCORE;
+	    int score = (int)gameConfig::Score::STARTING_SCORE;
         int currLives = (int)gameConfig::Size::START_LIVES;
         gameBoard.printLegend(currLives);
         bool isMarioLocked = false;
@@ -160,6 +161,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
         int elapsedSeconds = 0;
 		clearBuffer();
+
         while (true) {
             char keyPressed = handleUserInput();
             if (keyPressed == (int)gameConfig::eKeys::ESC) {
@@ -587,5 +589,13 @@ void Game::updateClock(const std::chrono::seconds& elapsedTime)
     // Print the clock with zero padding (e.g., 01:05 for 1 minute and 5 seconds)
     std::cout << std::setw(2) << std::setfill('0') << minutes << ":"
         << std::setw(2) << std::setfill('0') << seconds;
+}
+
+void Game::reportResultError(const std::string& message, const std::string& filename, size_t iteration) {
+    system("cls");
+    std::cout << "Screen " << filename << " - " << message << '\n';
+    std::cout << "Iteration: " << iteration << '\n';
+    std::cout << "Press any key to continue to next screens (if any)" << std::endl;
+    _getch();
 }
 

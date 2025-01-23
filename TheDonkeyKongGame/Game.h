@@ -48,6 +48,6 @@ public:
 	void handleMarioMovement(Mario& mario, bool& isMarioLocked, char keyPressed);
 	void updateScore(Map& gameBoard, int score);
 	void moveToNextStage(int stageIndex);
-
+	void reportResultError(const std::string& message, const std::string& filename, size_t iteration);
 };
 

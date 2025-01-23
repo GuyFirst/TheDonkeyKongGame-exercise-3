@@ -25,6 +25,8 @@ void Results::saveResults(const std::string& filename) const {
 	results_file.close();
 }
 
+
+
 size_t Results::getNextSignificantIteration() const {
 	if (!results.empty() && results.front().second != NO_RESULT && results.front().second != REACH_PAULIN) {
 			return results.front().first;
