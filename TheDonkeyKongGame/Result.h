@@ -4,7 +4,7 @@
 #include <string>
 class Results {
 public:
-	enum ResultValue { HIT_BARREL, HIT_GHOST, FALL_DAMAGE, EXPLODED, REACH_PAULIN, NO_RESULT}; // Maybe we need a WIN event
+	enum ResultValue { DIED, REACH_PAULIN, NO_RESULT}; // Maybe we need a WIN event
 private:
 	std::list<std::pair<size_t, ResultValue>> results; // pair: iteration, result
 public:

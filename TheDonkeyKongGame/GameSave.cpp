@@ -55,9 +55,14 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
         size_t iteration = 0;
         for (;true; iteration++) {
-            size_t nextSignificantIteration = results.getNextSignificantIteration(); 0; // May result in bugs, be aware
            
             char keyPressed = handleUserInput();
+           
+            // Add isRelevantKeyPressed() to the functions of GameSave, basically if a,w,s,d,x,p,`, were pressed
+            if (keyPressed == isRelevantKeyPressed()) {
+                steps.addStep(iteration, keyPressed);
+            }
+
             if (keyPressed == (int)gameConfig::eKeys::ESC) {
                 pauseGame(gameBoard, currLives);
                 continue;
@@ -71,9 +76,19 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
             // Handle game logic
             if (handlePatishInteraction(mario, patishPicked, gameBoard)) continue;
+
+            // Need to chane handleLifeLoss that will return if mario lost life instead if he lost the game
+             // That part is simillar to kirsh's if(!goodMove) part
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
-                return -1;
+                results.addResult(iteration, Results::DIED);
+                if (currLives == 0) return -1;
+                
             }
+
+            
+
+            // Stopped working here (stopped copying from kirsh's code
+
 
             if (mario.isNearPaulina()) break;
 

@@ -399,10 +399,12 @@ void Game::drawMario(Mario& mario) {
     mario.draw(curr == 'H' ? '#' : '@');
 }
 
+
+// CHANGED!!!!! returns now if mario lost a life instead if he lost the game
+// תשמע אולי זה יוצר באגים אחושרמוטה, יש את הגרסה הישנה בגיט בכל מקרה
 bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& barrelCurr, int& barrelSpawnCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score) {
     if (currLives == mario.lives) return false;
 
-    if (currLives == 1) return true;
     score -= (int)gameConfig::Score::LIFE_LOSS;
     loseALife();
     gameBoard.resetMap();
@@ -416,7 +418,7 @@ bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& bar
     isMarioLocked = false;
     barrels.clear();
     clearBuffer();
-    return false;
+    return true;
 }
 
 void Game::spawnBarrel(std::vector<Barrel>& barrels, int& barrelCurr, Map& gameBoard) {
