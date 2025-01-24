@@ -17,35 +17,38 @@
 #include "UniqueGhost.h"
 #include "Steps.h"
 #include "Result.h"
+#include "GameLoad.h"
+#include "GameSave.h"
+#include <typeinfo>
 
 
-void Game::run()
+void Game::run(bool isLoad,bool isSave,bool isSilent)
 {
     std::vector<std::string> vec_to_fill;
     getAllBoardFileNames(vec_to_fill);
-
-    int flag = 0;
-    Point screenStart(0, 0);
-    while (true)                                        //
-    {                                                   //
-        gotoxy(screenStart.getX(), screenStart.getY()); // 
-        Map menu;                                       // the flags indicates if the player wins, loses, or quiting the game.
-        flag = menu.mainMenu(vec_to_fill);                         //  -1 for deciding to quit (before we entered the game)
-        if (flag == -1)                                 //   1 if the player won
-            return;  
-        if (vec_to_fill.size() == 0)
-        {
-            noScreensMessage();
-            return;
-        }
-        flag = startGame(vec_to_fill, flag - '1');      //  -1 if the player lost
-                                                        //
-        if (flag == 1)                                  //
-            win();                                      //
-        else                                            //
-            lose();
+ 
+        int flag = 0;
+        Point screenStart(0, 0);
+        while (true)                                        //
+        {                                                   //
+            gotoxy(screenStart.getX(), screenStart.getY()); // 
+            Map menu;                                       // the flags indicates if the player wins, loses, or quiting the game.
+            flag = menu.mainMenu(vec_to_fill);                         //  -1 for deciding to quit (before we entered the game)
+            if (flag == -1)                                 //   1 if the player won
+                return;
+                if (vec_to_fill.size() == 0)
+                {
+                    noScreensMessage();
+                    return;
+                }
+            flag = startGame(vec_to_fill, flag - '1', isLoad, isSave, isSilent);      //  -1 if the player lost
+            //
+            if (flag == 1)                                  //
+                win();                                      //
+            else                                            //
+                lose();
+       
     }
-    return;
 }
 
 bool Game::getAllBoardFileNames(std::vector<std::string>& vec_to_fill) {
@@ -117,18 +120,6 @@ void Game::pressAnyKeyToMoveToNextStage() const
             return;
 }
 
-void Game::hack() const
-{
-	Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
-    clrsrc();
-	gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
-    printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "You have activated the hack!\n");
-    gotoxy(gameConfig::GAME_WIDTH / 3, (gameConfig::GAME_HEIGHT / 2) +1);
-    printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "Press any key to move on to the next stage!");
-	while (true)
-		if (_kbhit())
-			return;
-}
 
 /*//feel free to delete/comment 144-150 lines to disable the music
         gotoxy(0, 0);
@@ -139,19 +130,36 @@ void Game::hack() const
          std::cout << gameBoard.originalMap[0][i];
          Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);*/
          //Game state variables
-
-int Game::startGame(std::vector<std::string> fileNames, int index) {
+int Game::startGame(std::vector<std::string> fileNames, int index, bool isLoad, bool isSave, bool isSilent) {
     for (int i = index; i < fileNames.size(); i++) {
         ShowConsoleCursor(false);
         gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
-        
+
         // Initialize game board and objects
         Map gameBoard = initializeGameBoard(fileNames[i]);
         if (!gameBoard.isMapValid()) continue;
+
+        long random_seed;
+        Steps steps;
+        Results results;
+        std::string filename = fileNames[i];
+
+        // Making recording file names
+        std::string filename_prefix = filename.substr(0, filename.find_last_of('.'));
+        std::string stepsFilename = filename_prefix + ".steps";
+        std::string resultsFilename = filename_prefix + ".result";
+
+        // Setting random seed
+        random_seed = static_cast<long>(std::chrono::system_clock::now().time_since_epoch().count());
+        steps.setRandomSeed(random_seed);
+        srand(random_seed);
+
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
         std::vector<Ghost*> ghosts = initializeGhosts(gameBoard);
-	    int score = (int)gameConfig::Score::STARTING_SCORE;
+
+
+        int score = (int)gameConfig::Score::STARTING_SCORE;
         int currLives = (int)gameConfig::Size::START_LIVES;
         gameBoard.printLegend(currLives);
         bool isMarioLocked = false;
@@ -160,43 +168,59 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         std::vector<Point> togglePoints = defineFloorsToToggle(gameBoard);
         std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
         int elapsedSeconds = 0;
-		clearBuffer();
+        clearBuffer();
 
-        while (true) {
-            char keyPressed = handleUserInput();
+        if (typeid(*this) == typeid(GameLoad))
+        {
+            results.loadResults(resultsFilename);
+            steps.loadSteps(stepsFilename);
+        }
+        
+        size_t iteration = 0;
+        for (; true; iteration++) {
+
+       
+            char keyPressed = handleUserInput(steps, iteration);
+
+            if (this->isReleventKeyPressed(keyPressed)) {   steps.addStep(iteration, keyPressed);  }
+
             if (keyPressed == (int)gameConfig::eKeys::ESC) {
                 pauseGame(gameBoard, currLives);
                 continue;
             }
 
-            if (keyPressed == '`') {
-                barrels.clear();
-                hack();
-                break;
-            }
-
             // Handle game logic
             if (handlePatishInteraction(mario, patishPicked, gameBoard)) continue;
+
+
+
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
-                return -1;
+                handleDieResult(results,iteration, fileNames[i]);   
+                if (currLives == 0)
+                    break;
             }
 
-            if (mario.isNearPaulina()) break;
+
+            if (mario.isNearPaulina())
+            {
+                handlePaulineResult(results, iteration, fileNames[i]);
+                break;
+            }
 
             // Handle barrel spawning
             handleBarrelSpawning(barrels, gameBoard);
             // handle patish
-			patishDestroy(barrels, ghosts, mario, keyPressed, score);
+            patishDestroy(barrels, ghosts, mario, keyPressed, score);
             // Move barrels and ghosts
             moveBarrelsAndGhosts(barrels, ghosts, mario);
 
-			Sleep((int)gameConfig::Sleep::GAME_LOOP_SLEEP);
+            Sleep(isLoad ? 10 : (isSilent ? 0 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
 
             // Toggle arrows every 4 seconds
             toggleArrowsEvery4Sec(gameBoard, togglePoints, lastToggleTime);
 
             //handle patish
-			patishDestroy(barrels, ghosts, mario, keyPressed, score);
+            patishDestroy(barrels, ghosts, mario, keyPressed, score);
 
             // Handle Mario movement
             handleMarioMovement(mario, isMarioLocked, keyPressed);
@@ -206,15 +230,19 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             // Update score
             updateScore(gameBoard, score);
         }
-
+        results.saveResults(resultsFilename);
+        steps.saveSteps(stepsFilename);
+        if (currLives == 0)
+            return -1;
         if (i != fileNames.size() - 1) {
             moveToNextStage(i);
         }
-		clearBuffer();
+        clearBuffer();
     }
-	clearBuffer();
+    clearBuffer();
     return 1;
 }
+
 
 void Game::updateClock(std::chrono::steady_clock::time_point& startTime, int& elapsedSeconds, Map& gameBoard, int& score) {
     // Get the current time
@@ -282,13 +310,7 @@ std::vector<Ghost*> Game::initializeGhosts(Map& gameBoard) {
 }
 
 // Handle user input
-char Game::handleUserInput() {
-    char keyPressed = (int)gameConfig::eKeys::NONE;
-    if (_kbhit()) {
-        keyPressed = std::tolower(_getch());
-    }
-    return keyPressed;
-}
+
 
 // Pause the game
 void Game::pauseGame(Map& gameBoard, const int currLives) {
@@ -400,11 +422,9 @@ void Game::drawMario(Mario& mario) {
 }
 
 
-// CHANGED!!!!! returns now if mario lost a life instead if he lost the game
-// תשמע אולי זה יוצר באגים אחושרמוטה, יש את הגרסה הישנה בגיט בכל מקרה
 bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& barrelCurr, int& barrelSpawnCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score) {
-    if (currLives == mario.lives) return false;
-
+    if (currLives == mario.lives)
+        return false;
     score -= (int)gameConfig::Score::LIFE_LOSS;
     loseALife();
     gameBoard.resetMap();
@@ -418,6 +438,7 @@ bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& bar
     isMarioLocked = false;
     barrels.clear();
     clearBuffer();
+
     return true;
 }
 
@@ -593,11 +614,4 @@ void Game::updateClock(const std::chrono::seconds& elapsedTime)
         << std::setw(2) << std::setfill('0') << seconds;
 }
 
-void Game::reportResultError(const std::string& message, const std::string& filename, size_t iteration) {
-    system("cls");
-    std::cout << "Screen " << filename << " - " << message << '\n';
-    std::cout << "Iteration: " << iteration << '\n';
-    std::cout << "Press any key to continue to next screens (if any)" << std::endl;
-    _getch();
-}
 

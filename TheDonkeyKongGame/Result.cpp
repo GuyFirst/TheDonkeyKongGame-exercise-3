@@ -2,18 +2,17 @@
 #include <fstream>
 
 
-Results Results::loadResults(const std::string& filename) {
+void Results::loadResults(const std::string& filename) {
 	std::ifstream results_file(filename);
-	Results results;
 	size_t size;
 	results_file >> size;
 	while (!results_file.eof() && size-- != 0) {
 		size_t iteration;
 		int result;
 		results_file >> iteration >> result;
-		results.addResult(iteration, static_cast<ResultValue>(result));
+		this->addResult(iteration, static_cast<ResultValue>(result));
 	}
-	return results;
+	results_file.close();
 }
 
 void Results::saveResults(const std::string& filename) const {
@@ -27,12 +26,4 @@ void Results::saveResults(const std::string& filename) const {
 
 
 
-size_t Results::getNextSignificantIteration() const {
-	if (!results.empty() && results.front().second != NO_RESULT && results.front().second != REACH_PAULIN) {
-			return results.front().first;
-		}
-	
-	return 0;
-	// we use the fact that on iteration zero we cannot hit a bomb
-	// to indicate that there isn't any result left with a hit bomb event
-}
+

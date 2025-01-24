@@ -1,11 +1,15 @@
 #pragma once
 #include "Game.h"
+
 class GameLoad : public Game
 {
 	bool isSilent = false;
 public:
-	virtual void run();
+	GameLoad() {}
 	void setIsSilent(bool isSilentMode) {isSilent = isSilentMode;}
-	int startGame(std::vector<std::string> fileNames, int index);
+	char handleUserInput(Steps& steps, int iteration);
+	bool isReleventKeyPressed(const char& key) override { return false; }
+	 void handleDieResult(Results& results, const int& iteration, std::string fileName);
+	 void handlePaulineResult(Results& results, const int& iteration, std::string fileName);
 };
 

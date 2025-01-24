@@ -1,23 +1,25 @@
 #include "Steps.h"
-
+#include "gameConfig.h"
 #include <fstream>
+#include <iostream>
 
 
-
-Steps Steps::loadSteps(const std::string& filename) {
-	Steps steps;
+void Steps::loadSteps(const std::string& filename) {
+	
 	std::ifstream steps_file(filename);
-	steps_file >> steps.randomSeed;
+	if (!steps_file.is_open())
+		std::cout << " oh know";
+	steps_file >> this->randomSeed;
 	size_t size;
 	steps_file >> size;
 	while (!steps_file.eof() && size-- != 0) {
 		size_t iteration;
 		char step;
 		steps_file >> iteration >> step;
-		steps.addStep(iteration, step);
+		this->addStep(iteration, step);
 	}
 	steps_file.close();
-	return steps;
+
 }
 
 void Steps::saveSteps(const std::string& filename) const {
@@ -27,4 +29,17 @@ void Steps::saveSteps(const std::string& filename) const {
 		steps_file << '\n' << step.first << ' ' << step.second;
 	}
 	steps_file.close();
+}
+
+
+void Steps::printSteps() const {
+	gotoxy(0, 0);
+	if (steps.empty()) {
+		std::cout << "No steps available." << std::endl;
+		return;
+	}
+
+	for (const auto& step : steps) {
+		std::cout << "Itr: " << step.first << ",Step: " << step.second << "  ";
+	}
 }

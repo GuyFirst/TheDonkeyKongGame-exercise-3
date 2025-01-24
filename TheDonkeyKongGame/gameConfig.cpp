@@ -46,4 +46,10 @@ void printSlow(int delay, const std::string& text)
 		Sleep(delay);  // Delay in milliseconds
 	}
 }
-
+void reportResultError(const std::string& message, const std::string& filename, size_t iteration) {
+	system("cls");
+	std::cout << "Screen " << filename << " - " << message << '\n';
+	std::cout << "Iteration: " << iteration << '\n';
+	std::cout << "Press any key to continue to next screens (if any)" << std::endl;
+	_getch();
+}

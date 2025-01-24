@@ -7,13 +7,18 @@
 #include <iomanip>      
 #include <thread> 
 #include <string>
+#include "Steps.h"
+#include "Result.h"
 
 class Game
 {
 public:
-	virtual void run();
-	virtual char handleUserInput();
-	int startGame(std::vector<std::string>, int index);
+	virtual void handleDieResult( Results& results, const int& iteration, std::string fileName) = 0;
+	virtual void handlePaulineResult(Results& results, const int& iteration, std::string fileName) = 0;
+    void run(bool isLoad,bool isSave,bool isSilent);
+	virtual char handleUserInput(Steps& steps, int iteration) = 0;
+    int startGame(std::vector<std::string>, int index, bool isLoad, bool isSave, bool isSilent);
+	virtual bool isReleventKeyPressed(const char& key) = 0;
 	void pause();
 	void loseALife() const;
 	void win() const;
@@ -36,7 +41,6 @@ public:
 	void handleErrors(int& flag);
 	void noScreensMessage() const;
 	void pressAnyKeyToMoveToNextStage() const;
-	void hack() const;
 	Map initializeGameBoard(const std::string& fileName);
 	std::vector<Barrel> initializeBarrels(Map& gameBoard);
 	std::vector<Ghost*>  initializeGhosts(Map& gameBoard);
@@ -48,6 +52,5 @@ public:
 	void handleMarioMovement(Mario& mario, bool& isMarioLocked, char keyPressed);
 	void updateScore(Map& gameBoard, int score);
 	void moveToNextStage(int stageIndex);
-	void reportResultError(const std::string& message, const std::string& filename, size_t iteration);
 };
 
