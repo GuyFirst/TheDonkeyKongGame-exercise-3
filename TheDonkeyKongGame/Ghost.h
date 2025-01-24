@@ -27,7 +27,10 @@ private:
 
 protected: // Dont know if should be protected
    void handleCollision(std::vector<Ghost*>& Ghosts);
-   virtual void handleDirectionChange() { if (((std::rand() + m_id) % 100) + 1 <= 5 || !isOnFloor()) { m_diff_x = -m_diff_x; }}
+   virtual void handleDirectionChange() { 
+       if (((std::rand() + m_id) % 100) + 1 <= 5 || !isOnFloor()) {
+           m_diff_x = -m_diff_x; }
+   }
   // virtual bool isNearOtherGhosts() const { return map->currentMap[position.getY()][position.getX() + m_diff_x] == 'x' || map->currentMap[position.getY()][position.getX() + m_diff_x] == 'X'; }
    virtual bool isNearOtherGhosts(Ghost &other) const { return this->position == other.position; }
 

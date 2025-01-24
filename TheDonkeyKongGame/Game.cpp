@@ -149,10 +149,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index, bool isLoad, 
         std::string stepsFilename = filename_prefix + ".steps";
         std::string resultsFilename = filename_prefix + ".result";
 
-        // Setting random seed
-        random_seed = static_cast<long>(std::chrono::system_clock::now().time_since_epoch().count());
-        steps.setRandomSeed(random_seed);
-        srand(random_seed);
+        
 
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
@@ -170,29 +167,27 @@ int Game::startGame(std::vector<std::string> fileNames, int index, bool isLoad, 
         int elapsedSeconds = 0;
         clearBuffer();
 
-        if (typeid(*this) == typeid(GameLoad))
-        {
-            results.loadResults(resultsFilename);
-            steps.loadSteps(stepsFilename);
-        }
-        
+        handleStartOfGameLoop(results, steps, resultsFilename, stepsFilename);
+
+        // Setting random seed
+        random_seed = static_cast<long>(std::chrono::system_clock::now().time_since_epoch().count());
+        setRandomSeed(random_seed, steps);
+        srand(random_seed);
+
         size_t iteration = 0;
         for (; true; iteration++) {
 
-       
             char keyPressed = handleUserInput(steps, iteration);
 
-            if (this->isReleventKeyPressed(keyPressed)) {   steps.addStep(iteration, keyPressed);  }
+            if (this->isReleventKeyPressed(keyPressed)) {
+                steps.addStep(iteration, keyPressed);  }
 
             if (keyPressed == (int)gameConfig::eKeys::ESC) {
                 pauseGame(gameBoard, currLives);
                 continue;
             }
-
             // Handle game logic
             if (handlePatishInteraction(mario, patishPicked, gameBoard)) continue;
-
-
 
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
                 handleDieResult(results,iteration, fileNames[i]);   
@@ -212,9 +207,9 @@ int Game::startGame(std::vector<std::string> fileNames, int index, bool isLoad, 
             // handle patish
             patishDestroy(barrels, ghosts, mario, keyPressed, score);
             // Move barrels and ghosts
-            moveBarrelsAndGhosts(barrels, ghosts, mario);
+            moveBarrelsAndGhosts(barrels, ghosts, mario, isLoad, isSave, isSilent);
 
-            Sleep(isLoad ? 10 : (isSilent ? 0 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
+            Sleep(isSilent ? 0 : (isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
 
             // Toggle arrows every 4 seconds
             toggleArrowsEvery4Sec(gameBoard, togglePoints, lastToggleTime);
@@ -230,9 +225,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index, bool isLoad, 
             // Update score
             updateScore(gameBoard, score);
         }
-        results.saveResults(resultsFilename);
-        steps.saveSteps(stepsFilename);
-        if (currLives == 0)
+        handleEndOfGameLoop(results, steps, resultsFilename, stepsFilename);
+        if (!currLives)
             return -1;
         if (i != fileNames.size() - 1) {
             moveToNextStage(i);
@@ -343,8 +337,8 @@ void Game::handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard) {
 }
 
 // Move barrels and ghosts
-void Game::moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario) {
-    moveBarrels(barrels, mario);
+void Game::moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent) {
+    moveBarrels(barrels, mario, isLoad, isSave, isSilent);
     moveGhosts(ghosts);
 }
 
@@ -447,12 +441,12 @@ void Game::spawnBarrel(std::vector<Barrel>& barrels, int& barrelCurr, Map& gameB
     barrelCurr++;
 }
 
-void Game::moveBarrels(std::vector<Barrel>& barrels, Mario& mario) {
+void Game::moveBarrels(std::vector<Barrel>& barrels, Mario& mario, bool isLoad, bool isSave, bool isSilent) {
     for (int i = 0; i < Barrel::barrelCurr; i++) {
         if (i < barrels.size()) {
             char curr = barrels[i].getMapChar();
             barrels[i].draw('O');
-            barrels[i].move(barrels, &mario);
+            barrels[i].move(barrels, &mario, isLoad, isSave, isSilent);
         }
     }
 }

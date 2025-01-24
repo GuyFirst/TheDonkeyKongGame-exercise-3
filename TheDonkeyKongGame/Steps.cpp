@@ -8,7 +8,7 @@ void Steps::loadSteps(const std::string& filename) {
 	
 	std::ifstream steps_file(filename);
 	if (!steps_file.is_open())
-		std::cout << " oh know";
+		std::cout << " oh no";
 	steps_file >> this->randomSeed;
 	size_t size;
 	steps_file >> size;

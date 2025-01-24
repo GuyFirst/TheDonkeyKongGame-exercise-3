@@ -14,5 +14,11 @@ public:
 	bool  isReallyReachedPauline(const Results& results, const int& iteration) const { return true; }
 	 void handleDieResult(Results& results, const int& iteration, std::string fileName);
 	 void handlePaulineResult(Results& results, const int& iteration, std::string fileName);
+	 virtual void setRandomSeed(long& random_seed, Steps& steps) override { steps.setRandomSeed(random_seed); }
+	 virtual void handleEndOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) override {
+		 results.saveResults(resultsFileName);
+		 steps.saveSteps(stepsFileName);
+	 }
+	 void handleStartOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) override {}
 };
 

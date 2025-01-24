@@ -24,7 +24,7 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
     draw(map->originalMap[position.getY()][position.getX()]);
     
         handleCollision(ghosts);
-    //    handleDirectionChange();
+        handleDirectionChange();
    
       
     // Update position 
@@ -37,23 +37,6 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
     draw(me);
 }
 
-
-//void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {
-//    for (auto& other : ghosts) {
-//        // Skip checking collision with itself
-//        if (other == this) {  
-//            continue;
-//        }
-//
-//        // Check if two ghosts are on the same row 
-//        if (this->position.getY() == other->position.getY()) {
-//            if (other->isNearOtherGhosts()) {
-//                this->m_diff_x = -(this->m_diff_x);
-//                other->m_diff_x = -(other->m_diff_x);
-//            }
-//        }
-//    }
-//}
 
 
 void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {

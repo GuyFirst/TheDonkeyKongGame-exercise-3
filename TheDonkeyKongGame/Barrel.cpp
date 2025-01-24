@@ -7,7 +7,7 @@ int Barrel::barrelCurr = 0;
 
 int Barrel::barrelSpawnCounter = 0;
 
-void Barrel::move(std::vector<Barrel>& barrels,Mario* mario) {
+void Barrel::move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent) {
     char floor = '\0';
     char& refFloor = floor;
 
@@ -40,7 +40,7 @@ void Barrel::move(std::vector<Barrel>& barrels,Mario* mario) {
     }
 
     if (isExploded) {
-        handleExplosion(barrels,mario);
+        handleExplosion(barrels,mario, isLoad, isSave, isSilent);
     }
     else {
         updatePosition();
@@ -55,7 +55,7 @@ void Barrel::updatePosition() {
     position.setY(position.getY() + m_diff_y);
 }
 
-void Barrel::handleExplosion(std::vector<Barrel>& barrels, Mario* mario) {
+void Barrel::handleExplosion(std::vector<Barrel>& barrels, Mario* mario, bool isLoad, bool isSave, bool isSilent) {
   
     // Save the original floor tiles that will be overwritten by the explosion
     std::vector<char> originalTiles;
@@ -72,7 +72,7 @@ void Barrel::handleExplosion(std::vector<Barrel>& barrels, Mario* mario) {
     // Start the explosion animation
     for (int i = 0; i < 3; ++i) {
         drawExplosion(explosionPattern, '#'); 
-        Sleep(static_cast<int>(gameConfig::Sleep::EXPLOSION_SLEEP)); 
+        Sleep(isLoad ? static_cast<int>(gameConfig::Sleep::EXPLOSION_SLEEP)/2 : (isSilent ? 0 : static_cast<int>(gameConfig::Sleep::EXPLOSION_SLEEP)));
         drawExplosion(explosionPattern, ' '); 
     }
 

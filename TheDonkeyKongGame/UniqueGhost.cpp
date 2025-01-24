@@ -4,11 +4,6 @@ bool UniqueGhost::shouldClimbLadder() {
 	return (std::rand() % 2 == 0); // 50% probability to return true
 }
 
-//void UniqueGhost::followMario()
-//{
-//	Point marioPos = map.;
-//}
-
 
 void UniqueGhost::move(std::vector<Ghost*>& ghosts) {
     draw(map->originalMap[position.getY()][position.getX()]);

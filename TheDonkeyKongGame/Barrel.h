@@ -14,7 +14,7 @@ class Barrel : public Entity {
 
     // Helper methods
     void updatePosition();
-    void handleExplosion(std::vector<Barrel>& barrels,Mario* mario);
+    void handleExplosion(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent);
     bool isOnAir(char& refFloor);
     bool isNearWall(int dirX) const;
     bool checkFallHeight();
@@ -38,7 +38,7 @@ public:
     }
 
 
-    void move(std::vector<Barrel>& barrels,Mario* mario);
+    void move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent);
     void reset();
     void addBarrel(std::vector<Barrel>& barrels, Map* map);  
     void drawExplosion(const std::vector<Point>& pattern, char explosionChar);

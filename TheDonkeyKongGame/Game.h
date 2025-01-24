@@ -17,16 +17,19 @@ public:
 	virtual void handlePaulineResult(Results& results, const int& iteration, std::string fileName) = 0;
     void run(bool isLoad,bool isSave,bool isSilent);
 	virtual char handleUserInput(Steps& steps, int iteration) = 0;
+	virtual void handleStartOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) = 0;
+	virtual void handleEndOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) = 0;
     int startGame(std::vector<std::string>, int index, bool isLoad, bool isSave, bool isSilent);
 	virtual bool isReleventKeyPressed(const char& key) = 0;
 	void pause();
-	void loseALife() const;
+	virtual void loseALife() const;
+	virtual void setRandomSeed(long& random_seed, Steps& steps) = 0;
 	void win() const;
 	void lose() const;
 	void drawMario(Mario& mario);
 	bool handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, static int& barrelCurr, static int& barrelCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score);
 	void spawnBarrel(std::vector<Barrel>& barrels, int& barrelCurr, Map& gameBoard);
-	void moveBarrels(std::vector<Barrel>& barrels, Mario& mario);
+	void moveBarrels(std::vector<Barrel>& barrels, Mario& mario, bool isLoad, bool isSave, bool isSilent);
 	void handleMarioLocked(char keyPressed, Mario& mario, bool& isMarioLocked);
 	bool isMarioInLongAction(Mario& mario) const;
 	bool isMarioInShortAction(Mario& mario) const;
@@ -47,10 +50,10 @@ public:
 	void pauseGame(Map& gameBoard,const int currLives);
 	bool handlePatishInteraction(Mario& mario, bool& patishPicked, Map& gameBoard);
 	void handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard);
-	void moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario);
+	void moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent);
 	void toggleArrowsEvery4Sec(Map& gameBoard, std::vector<Point>& togglePoints, std::chrono::steady_clock::time_point& lastToggleTime);
 	void handleMarioMovement(Mario& mario, bool& isMarioLocked, char keyPressed);
 	void updateScore(Map& gameBoard, int score);
-	void moveToNextStage(int stageIndex);
+	virtual void moveToNextStage(int stageIndex);
 };
 

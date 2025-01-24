@@ -23,4 +23,3 @@ void GameSave::handlePaulineResult(Results& results, const int& iteration, std::
     results.addResult(iteration, Results::REACH_PAULIN);
 }
 
-

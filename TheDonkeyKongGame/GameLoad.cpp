@@ -18,11 +18,15 @@ void GameLoad::handleDieResult( Results& results, const int& iteration, std::str
 	
 }
 
+
 void GameLoad::handlePaulineResult(Results& results, const int& iteration, std::string fileName)
 {
 	if (results.popResult() != std::pair{ iteration, Results::REACH_PAULIN })
 		reportResultError("Mario is near Pauline altough he was not suppose to be there", fileName, iteration);
 }
+
+
+
 
 
 
