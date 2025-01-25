@@ -43,7 +43,7 @@ public:
 
     virtual ~Entity() = default;
 
-    virtual void draw(char ch) const;
+    virtual void draw(char ch, bool isLoad, bool isSave, bool isSilent) const;
     
 
     Point getPoint() const { return position; }

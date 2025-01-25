@@ -17,7 +17,7 @@ public:
     
     virtual ~Ghost() = default;  // Virtual destructor
 
-    virtual void move(std::vector<Ghost*>& Ghosts);
+    virtual void move(std::vector<Ghost*>& Ghosts, bool isLoad, bool isSave, bool isSilent);
     void reset() { position = startingPosition; };
  
 

@@ -20,8 +20,8 @@
 //
 
 
-void Ghost::move(std::vector<Ghost*>& ghosts) {
-    draw(map->originalMap[position.getY()][position.getX()]);
+void Ghost::move(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isSilent) {
+    draw(map->originalMap[position.getY()][position.getX()], isLoad, isSave, isSilent);
     
         handleCollision(ghosts);
         handleDirectionChange();
@@ -34,7 +34,7 @@ void Ghost::move(std::vector<Ghost*>& ghosts) {
 
     position.setX(position.getX() + m_diff_x);
     // Draw ghost at the new position
-    draw(me);
+    draw(me, isLoad, isSave, isSilent);
 }
 
 

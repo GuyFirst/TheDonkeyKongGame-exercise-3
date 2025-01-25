@@ -24,9 +24,12 @@ bool Entity::isOnFloor() const {
         this->map->currentMap[position.getY() + 1][position.getX()] != 'x';
 }
 
-void Entity::draw(char ch) const {
-    gotoxy(position.getX(), position.getY());
-    std::cout << ch;
+void Entity::draw(char ch, bool isLoad, bool isSave, bool isSilent) const {
+    if (!isSilent)
+    {
+        gotoxy(position.getX(), position.getY());
+        std::cout << ch;
+    }
     map->currentMap[position.getY()][position.getX()] = ch;
 }
 

@@ -5,7 +5,7 @@ class GameLoad : public Game
 {
 	bool isSilent = false;
 public:
-	GameLoad() {}
+	GameLoad(bool isLoad, bool isSave, bool isSilent) : Game(isLoad, isSave, isSilent) {}
 	void setIsSilent(bool isSilentMode) {isSilent = isSilentMode;}
 	char handleUserInput(Steps& steps, int iteration);
 	bool isReleventKeyPressed(const char& key) override { return false; }
@@ -19,6 +19,14 @@ public:
 		results.loadResults(resultsFileName);
 		steps.loadSteps(stepsFileName);
 	}
+	void finish() const override{
+		clrsrc();
+		gotoxy(0, 0);
+		std::cout << "no issues where found, the game ran as it should have been.";
+	}
+	virtual void win() const override {};
+	virtual void lose() const override {};
+
 	
 };
 

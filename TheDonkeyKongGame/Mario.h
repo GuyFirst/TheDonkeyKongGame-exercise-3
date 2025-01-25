@@ -32,7 +32,7 @@ private:
     bool isWithPatish;
     bool isFalling = false;
     void draw(char ch) const;
-    void move(gameConfig::eKeys key = gameConfig::eKeys::NONE);
+    void move(gameConfig::eKeys key = gameConfig::eKeys::NONE, bool isSilent = false);
     void jump();
     void climb();
     void downLadder();
@@ -50,7 +50,7 @@ private:
     bool isOnFloor() const;
     bool isUnderFloor() const;
     bool isUnderFloorWhileMoving() const;
-    bool checkForCollisions(int key);
+    bool checkForCollisions(int key, bool isSilent);
     bool isObstacleAbove(int x) const { return map->currentMap[position.getY() - 1][x] != ' ' && map->currentMap[position.getY() - 1][x] != 'H' && map->currentMap[position.getY() - 1][x] != 'p'; }
     bool isCeilingAbove() const       { return map->currentMap[position.getY() - 1][position.getX()] != ' ' &&
                                                map->currentMap[position.getY() - 1][position.getX()] != 'H' &&

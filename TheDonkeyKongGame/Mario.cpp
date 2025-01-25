@@ -9,16 +9,17 @@ void Mario::draw(char ch) const
 {
     gotoxy(position.getX(), position.getY());
     std::cout << ch;
-    //map->currentMap[position.getY()][position.getX()] = ch;
+ 
 }
 
-void Mario::move(gameConfig::eKeys key) {
+void Mario::move(gameConfig::eKeys key, bool isSilent) {
     // Erase Mario from the current position
-    draw(map->originalMap[position.getY()][position.getX()]);
+    if(!isSilent)
+      draw(map->originalMap[position.getY()][position.getX()]);
 
 
     // Check for collision with barrels before moving
-    if (checkForCollisions((int)key)) {  return; }
+    if (checkForCollisions((int)key, isSilent)) {  return; }
 
     handleInput(key);
 
@@ -27,7 +28,7 @@ void Mario::move(gameConfig::eKeys key) {
     handleFalling();
     
     // Check for collision with barrels and ghosts after moving
-    if (checkForCollisions((int)key)) 
+    if (checkForCollisions((int)key,  isSilent))
         return;
 
     // Determine the character to draw
@@ -39,15 +40,17 @@ void Mario::move(gameConfig::eKeys key) {
     else { marioChar = '@'; }// Default Mario
 
     // Draw Mario at the new position
-    draw(marioChar);
+    if(!isSilent)
+      draw(marioChar);
  
 }
 
 
-bool Mario::checkForCollisions(int key) {
+bool Mario::checkForCollisions(int key, bool isSilent) {
     if (m_isNearExplosion) {
         lives--;
-        Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
+        if(!isSilent)
+           Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
         resetMario();
         return true;
     }

@@ -5,7 +5,7 @@
 class GameSave : public Game
 {
 public:
-	GameSave() {}
+	GameSave(bool isLoad, bool isSave, bool isSilent) : Game(isLoad, isSave, isSilent) {}
 	bool isReleventKeyPressed(const char& key) override {
 		return (key == 'a' || key == 's' || key == 'd' || key == 'w' || key == 's' || key == 'x' || key == 'p');
 	}
@@ -20,5 +20,17 @@ public:
 		 steps.saveSteps(stepsFileName);
 	 }
 	 void handleStartOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) override {}
+	 void win() const override
+	 {
+		 Map winScreen;
+		 winScreen.win();
+	 }
+	 void lose() const override
+	 {
+		 Map loseScreen;
+		 loseScreen.lose();
+
+	 }
+	 void finish() const override {}
 };
 

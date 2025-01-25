@@ -12,7 +12,7 @@ void Barrel::move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool i
     char& refFloor = floor;
 
     // Erase barrel from the current position
-    draw(map->originalMap[position.getY()][position.getX()]);
+    draw(map->originalMap[position.getY()][position.getX()], isLoad, isSave, isSilent);
 
     bool isExploded = false;
     if (isOnAir(refFloor)) {
@@ -45,7 +45,7 @@ void Barrel::move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool i
     else {
         updatePosition();
         
-        draw('O'); // Replace 'O' with the character representing a barrel
+        draw('O', isLoad, isSave, isSilent); // Replace 'O' with the character representing a barrel
         m_diff_x = m_prev_diff_x;
     }
 }
