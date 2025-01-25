@@ -50,9 +50,11 @@ void Game::run()
                     lose();                                                                
             }
             else
+            {
                 startGame(vec_to_fill, 0);
                 finish();
-            return;
+                return;
+            }
        
         }
 }
@@ -427,12 +429,15 @@ void Game::drawMario(Mario& mario) {
 bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& barrelCurr, int& barrelSpawnCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score) {
     if (currLives == mario.lives)
         return false;
+    currLives--;
+    if (currLives == 0)
+        return true;
     score -= (int)gameConfig::Score::LIFE_LOSS;
     loseALife();
     gameBoard.resetMap();
     if(!_isSilent)
         gameBoard.printcurrentMap();
-    currLives--;
+    
     if (!_isSilent)
         gameBoard.printLegend(currLives);
     mario.resetMario();
