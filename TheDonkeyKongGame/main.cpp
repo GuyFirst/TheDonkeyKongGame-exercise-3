@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 		game = new GameLoad(isLoad, isSave, isSilent);  
 		game->run();
 	}
-	if (isSave)
+	else
 	{
 		game = new GameSave(isLoad, isSave, isSilent);
 		game->run();

@@ -144,12 +144,12 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         Steps steps;
         Results results;
         std::string filename = fileNames[i];
-
+      
         // Making recording file names
         std::string filename_prefix = filename.substr(0, filename.find_last_of('.'));
         std::string stepsFilename = filename_prefix + ".steps";
         std::string resultsFilename = filename_prefix + ".result";
-
+        
         
 
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
@@ -181,7 +181,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
             char keyPressed = handleUserInput(steps, iteration);
 
-            if (this->isReleventKeyPressed(keyPressed)) {
+            if (this->isReleventKeyPressed(keyPressed) && _isSave) {
                 steps.addStep(iteration, keyPressed);  }
 
             if (keyPressed == (int)gameConfig::eKeys::ESC) {
@@ -192,7 +192,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             if (handlePatishInteraction(mario, patishPicked, gameBoard)) continue;
 
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
-                handleDieResult(results,iteration, fileNames[i]);   
+                if (_isLoad || _isSave)
+                         handleDieResult(results,iteration, fileNames[i]);   
                 if (currLives == 0)
                     break;
             }
@@ -200,7 +201,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
             if (mario.isNearPaulina())
             {
-                handlePaulineResult(results, iteration, fileNames[i]);
+                if (_isLoad || _isSave)
+                        handlePaulineResult(results, iteration, fileNames[i]);
                 break;
             }
 
@@ -227,7 +229,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             // Update score
             updateScore(gameBoard, score);
         }
-        handleEndOfGameLoop(results, steps, resultsFilename, stepsFilename);
+        if(_isSave)
+            handleEndOfGameLoop(results, steps, resultsFilename, stepsFilename);
         if (!currLives)
             return -1;
         if (i != fileNames.size() - 1) {
