@@ -53,3 +53,9 @@ void reportResultError(const std::string& message, const std::string& filename, 
 	std::cout << "Press any key to continue to next screens (if any)" << std::endl;
 	_getch();
 }
+void reportResult(const std::string& message) {
+	system("cls");
+	std::cout << message << std::endl;
+	std::cout << "Press any key to continue to next screens (if any)" << std::endl;
+	_getch();
+}

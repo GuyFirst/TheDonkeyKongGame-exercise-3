@@ -29,6 +29,10 @@ void Game::run()
  
         int flag = 0;
         Point screenStart(0, 0);
+        if (_isSilent) {
+            std::cout << "running in silent mode, please wait";
+            Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
+        }
         while (true)                                        //
         {                                                   //
             gotoxy(screenStart.getX(), screenStart.getY()); // 
@@ -52,7 +56,7 @@ void Game::run()
             else
             {
                 startGame(vec_to_fill, 0);
-                finish();
+                clrsrc();
                 return;
             }
        
@@ -132,6 +136,7 @@ void Game::pressAnyKeyToMoveToNextStage() const
 
          
 int Game::startGame(std::vector<std::string> fileNames, int index) {
+    bool endScreenResult;
     for (int i = index; i < fileNames.size(); i++) {
         ShowConsoleCursor(false);
         gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
@@ -144,7 +149,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         Steps steps;
         Results results;
         std::string filename = fileNames[i];
-      
+        
         // Making recording file names
         std::string filename_prefix = filename.substr(0, filename.find_last_of('.'));
         std::string stepsFilename = filename_prefix + ".steps";
@@ -163,6 +168,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
              gameBoard.printLegend(currLives);
         bool isMarioLocked = false;
         bool patishPicked = false;
+        bool isResultGood = true;
         auto lastToggleTime = std::chrono::steady_clock::now();
         std::vector<Point> togglePoints = defineFloorsToToggle(gameBoard);
         std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
@@ -193,7 +199,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
                 if (_isLoad || _isSave)
-                         handleDieResult(results,iteration, fileNames[i]);   
+                         handleDieResult(results,iteration, fileNames[i], isResultGood );   
                 if (currLives == 0)
                     break;
             }
@@ -202,7 +208,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             if (mario.isNearPaulina())
             {
                 if (_isLoad || _isSave)
-                        handlePaulineResult(results, iteration, fileNames[i]);
+                        handlePaulineResult(results, iteration, fileNames[i], isResultGood);
                 break;
             }
 
@@ -234,11 +240,15 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         if (!currLives)
             return -1;
         if (i != fileNames.size() - 1) {
-            moveToNextStage(i);
+            moveToNextStage(i, isResultGood);
         }
         clearBuffer();
+        endScreenResult = isResultGood;
     }
     clearBuffer();
+    
+    if (endScreenResult)
+        reportResult("No issues where found on this screen, everything ran properly.");
     return 1;
 }
 
@@ -386,7 +396,7 @@ void Game::updateScore(Map& gameBoard, int score) {
 }
 
 // Move to the next stage
-void Game::moveToNextStage(int stageIndex) {
+void Game::moveToNextStage(int stageIndex, bool isResultGood) {
     clrsrc();
     gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
     printSlow(static_cast<int>(gameConfig::Sleep::TEXT_PRINTING_SLEEP), "Stage ");

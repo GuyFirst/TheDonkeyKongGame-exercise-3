@@ -25,7 +25,6 @@ public:
 	char popStep() {
 		gotoxy(0, 0);
 		char step = steps.front().second;
-		std::cout << step;
 		steps.pop_front();
 		return step;
 	}

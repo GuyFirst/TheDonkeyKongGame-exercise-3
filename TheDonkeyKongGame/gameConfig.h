@@ -20,4 +20,5 @@ void ShowConsoleCursor(bool showFlag);
 void clearBuffer();
 void printSlow(int delay, const std::string& text);
 void reportResultError(const std::string& message, const std::string& filename, size_t iteration);
+void reportResult(const std::string& message);
 
