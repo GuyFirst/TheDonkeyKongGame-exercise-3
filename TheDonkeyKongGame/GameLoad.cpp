@@ -17,7 +17,7 @@ void GameLoad::handleDieResult(Results& results, const int& iteration, std::stri
 	if (results.popResult() != std::pair{ iteration, Results::DIED })
 	{
 		reportResultError("Mario is dead altough he was not suppose to be", fileName, iteration);
-		isResultGood == false;
+		isResultGood = false;
     }
 	
 }

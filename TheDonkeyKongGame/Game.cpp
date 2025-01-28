@@ -214,6 +214,9 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
                 break;
             }
 
+            if (!isResultGood)
+                break;
+
             // Handle barrel spawning
             handleBarrelSpawning(barrels, gameBoard);
             // handle patish
@@ -222,7 +225,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             moveBarrelsAndGhosts(barrels, ghosts, mario, this->_isLoad, this->_isSave, this->_isSilent);
 
            // Sleep(this->_isSilent ? 0 : (this->_isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
-            Sleep((int)gameConfig::Sleep::GAME_LOOP_SLEEP);
+            Sleep((int)gameConfig::Sleep::GAME_LOOP_SLEEP-40);
 
             // Toggle arrows every 4 seconds
             toggleArrowsEvery4Sec(gameBoard, togglePoints, lastToggleTime, this->_isSilent);
@@ -247,6 +250,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         }
         clearBuffer();
         endScreenResult = isResultGood;
+        
     }
     clearBuffer();
     
