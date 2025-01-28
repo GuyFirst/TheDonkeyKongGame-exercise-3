@@ -352,7 +352,6 @@ void Game::handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard) {
         barrels.emplace_back(&gameBoard, gameBoard.getBarrelStartPoint());
         Barrel::resetBarrelSpawnCounter();
         Barrel::incrementBarrelCurr();
-
     }
 }
 
