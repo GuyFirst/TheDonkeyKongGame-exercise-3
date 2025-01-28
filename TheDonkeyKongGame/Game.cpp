@@ -136,7 +136,7 @@ void Game::pressAnyKeyToMoveToNextStage() const
 
          
 int Game::startGame(std::vector<std::string> fileNames, int index) {
-    bool endScreenResult;
+    bool endScreenResult = true;
     for (int i = index; i < fileNames.size(); i++) {
         ShowConsoleCursor(false);
         gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
@@ -155,7 +155,9 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         std::string stepsFilename = filename_prefix + ".steps";
         std::string resultsFilename = filename_prefix + ".result";
         
-        
+        if (checkMissingFiles(filename, stepsFilename, resultsFilename)) {
+            continue;
+       }
 
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
@@ -219,7 +221,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             // Move barrels and ghosts
             moveBarrelsAndGhosts(barrels, ghosts, mario, this->_isLoad, this->_isSave, this->_isSilent);
 
-            Sleep(this->_isSilent ? 0 : (this->_isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
+           // Sleep(this->_isSilent ? 0 : (this->_isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
+            Sleep((int)gameConfig::Sleep::GAME_LOOP_SLEEP);
 
             // Toggle arrows every 4 seconds
             toggleArrowsEvery4Sec(gameBoard, togglePoints, lastToggleTime, this->_isSilent);
@@ -251,6 +254,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         reportResult("No issues where found on this screen, everything ran properly.");
     return 1;
 }
+
+
 
 
 void Game::updateClock(std::chrono::steady_clock::time_point& startTime, int& elapsedSeconds, Map& gameBoard, int& score) {

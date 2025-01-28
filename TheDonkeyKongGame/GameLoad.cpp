@@ -2,6 +2,7 @@
 #include "Steps.h"
 #include "Result.h"
 #include "gameConfig.h"
+#include <filesystem>
 
 char GameLoad::handleUserInput(Steps& steps, int iteration)
 {
@@ -30,7 +31,13 @@ void GameLoad::handlePaulineResult(Results& results, const int& iteration, std::
 	}
 }
 
-
+bool GameLoad::checkMissingFiles(const std::string& filename, const std::string& stepsFilename, const std::string& resultsFilename) {
+	if (!std::filesystem::exists(stepsFilename) || !std::filesystem::exists(resultsFilename)) {
+		std::cout << "Missing files for screen: " << filename << std::endl;
+		std::cout << "Moving to the next screen recording..." << std::endl;
+		return true;
+	}
+}
 
 
 

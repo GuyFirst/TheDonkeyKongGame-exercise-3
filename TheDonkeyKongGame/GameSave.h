@@ -30,5 +30,8 @@ public:
 		 Map loseScreen;
 		 loseScreen.lose();
 	 }
+
+	 bool checkMissingFiles(const std::string& filename, const std::string& stepsFilename, const std::string& resultsFilename) override { return false;}
+
 };
 

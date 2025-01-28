@@ -74,5 +74,7 @@ public:
     virtual void lose() const = 0;
     virtual void loseALife() const;
     virtual void moveToNextStage(int stageIndex, bool isResultGood);
+    virtual bool checkMissingFiles(const std::string& filename, const std::string& stepsFilename, const std::string& resultsFilename) = 0;
+
 
 };

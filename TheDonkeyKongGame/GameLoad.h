@@ -26,6 +26,8 @@ public:
 	}
 	virtual void win() const override {};
 	virtual void lose() const override {};
+	virtual bool checkMissingFiles(const std::string& filename, const std::string& stepsFilename, const std::string& resultsFilename) override;
+
 
 	
 };
