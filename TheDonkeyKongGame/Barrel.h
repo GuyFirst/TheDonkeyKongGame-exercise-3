@@ -41,7 +41,7 @@ public:
     void move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent);
     void reset();
     void addBarrel(std::vector<Barrel>& barrels, Map* map);  
-    void drawExplosion(const std::vector<Point>& pattern, char explosionChar);
+    void drawExplosion(const std::vector<Point>& pattern, char explosionChar, bool isSilent);
    
     static int getBarrelCurr() {  return barrelCurr;  }
     static int getBarrelSpawnCounter() { return barrelSpawnCounter; }

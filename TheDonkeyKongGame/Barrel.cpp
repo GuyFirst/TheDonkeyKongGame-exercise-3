@@ -71,19 +71,20 @@ void Barrel::handleExplosion(std::vector<Barrel>& barrels, Mario* mario, bool is
 
     // Start the explosion animation
     for (int i = 0; i < 3; ++i) {
-        drawExplosion(explosionPattern, '#'); 
+        drawExplosion(explosionPattern, '#', isSilent); 
         Sleep(isLoad ? static_cast<int>(gameConfig::Sleep::EXPLOSION_SLEEP)/2 : (isSilent ? 0 : static_cast<int>(gameConfig::Sleep::EXPLOSION_SLEEP)));
-        drawExplosion(explosionPattern, ' '); 
+        drawExplosion(explosionPattern, ' ', isSilent); 
     }
 
     // Clear the explosion and remove barrel
-    drawExplosion(explosionPattern, ' '); 
+    drawExplosion(explosionPattern, ' ', isSilent); 
 
     // Restore the original floor tiles
     for (int i = 0; i < explosionPattern.size(); ++i) {
         Point explosionPos = { getX() + explosionPattern[i].getX(), getY() + explosionPattern[i].getY() };
 		gotoxy(explosionPos.getX(), explosionPos.getY());
-        std::cout<<originalTiles[i];
+        if(!isSilent)
+           std::cout<<originalTiles[i];
     }
 
     // Remove barrel from the vector
@@ -98,11 +99,12 @@ void Barrel::handleExplosion(std::vector<Barrel>& barrels, Mario* mario, bool is
 }
 
 // Helper function to draw explosion effect
-void Barrel::drawExplosion(const std::vector<Point>& pattern, char explosionChar) {
+void Barrel::drawExplosion(const std::vector<Point>& pattern, char explosionChar, bool isSilent) {
     for (const Point& p : pattern) {
         Point explosionPos = { getX() + p.getX(), getY() + p.getY() }; // Calculate explosion positions
         gotoxy(explosionPos.getX(), explosionPos.getY());
-        std::cout << explosionChar;  // Draw the explosion part
+        if(!isSilent)
+          std::cout << explosionChar;  // Draw the explosion part
     }
 }
 

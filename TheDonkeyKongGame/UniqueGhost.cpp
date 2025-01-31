@@ -5,7 +5,7 @@ bool UniqueGhost::shouldClimbLadder() {
 }
 
 
-void UniqueGhost::move(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isSilent) {
+void UniqueGhost::move(std::vector<std::unique_ptr<Ghost>>& ghosts, bool isLoad, bool isSave, bool isSilent) {
     draw(map->originalMap[position.getY()][position.getX()], isLoad, isSave, isSilent);
 
       // Check if the ghost is at a ladder and should climb

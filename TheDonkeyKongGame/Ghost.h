@@ -17,7 +17,7 @@ public:
     
     virtual ~Ghost() = default;  // Virtual destructor
 
-    virtual void move(std::vector<Ghost*>& Ghosts, bool isLoad, bool isSave, bool isSilent);
+    virtual void move(std::vector<std::unique_ptr<Ghost>>& Ghosts, bool isLoad, bool isSave, bool isSilent);
     void reset() { position = startingPosition; };
  
 
@@ -26,7 +26,7 @@ private:
     Point startingPosition; 
 
 protected: // Dont know if should be protected
-   void handleCollision(std::vector<Ghost*>& Ghosts);
+   void handleCollision(std::vector<std::unique_ptr<Ghost>>& Ghosts);
    virtual void handleDirectionChange() { 
        if (((std::rand() + m_id) % 100) + 1 <= 5 || !isOnFloor()) {
            m_diff_x = -m_diff_x; }

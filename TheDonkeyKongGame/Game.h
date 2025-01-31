@@ -10,6 +10,8 @@
 #include "Barrel.h"
 #include "Steps.h"
 #include "Result.h"
+#include <memory>
+
 
 class Game
 {
@@ -28,16 +30,16 @@ public:
     void drawMario(Mario& mario);
 
     // Game logic functions
-    bool handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, static int& barrelCurr, static int& barrelCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score);
+    bool handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, static int& barrelCurr, static int& barrelCounter, bool& isMarioLocked, std::vector<std::unique_ptr<Ghost>>& ghosts, std::vector<Barrel>& barrels, int& score);
     void spawnBarrel(std::vector<Barrel>& barrels, int& barrelCurr, Map& gameBoard);
     void moveBarrels(std::vector<Barrel>& barrels, Mario& mario, bool isLoad, bool isSave, bool isSilent);
     void handleMarioLocked(char keyPressed, Mario& mario, bool& isMarioLocked);
     bool isMarioInLongAction(Mario& mario) const;
     bool isMarioInShortAction(Mario& mario) const;
     void toggleArrow(Map& gameBoard, const Point& point);
-    void moveGhosts(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isSilent);
-    void resetGhosts(std::vector<Ghost*>& ghosts);
-    void patishDestroy(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, char key, int& score, bool isSilent);
+    void moveGhosts(std::vector<std::unique_ptr<Ghost>>& ghosts, bool isLoad, bool isSave, bool isSilent);
+    void resetGhosts(std::vector<std::unique_ptr<Ghost>>& ghosts);
+    void patishDestroy(std::vector<Barrel>& barrels, std::vector<std::unique_ptr<Ghost>>& ghosts, Mario& mario, char key, int& score, bool isSilent);
 
     // Utility functions
     std::vector<Point> defineFloorsToToggle(Map& map);
@@ -51,13 +53,13 @@ public:
     // Initialization functions
     Map initializeGameBoard(const std::string& fileName, bool isSilent);
     std::vector<Barrel> initializeBarrels(Map& gameBoard);
-    std::vector<Ghost*> initializeGhosts(Map& gameBoard);
+    std::vector<std::unique_ptr<Ghost>> initializeGhosts(Map& gameBoard);
 
     // Game state functions
     void pauseGame(Map& gameBoard, const int currLives);
     bool handlePatishInteraction(Mario& mario, bool& patishPicked, Map& gameBoard);
     void handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard);
-    void moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent);
+    void moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<std::unique_ptr<Ghost>>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent);
     void toggleArrowsEvery4Sec(Map& gameBoard, std::vector<Point>& togglePoints, std::chrono::steady_clock::time_point& lastToggleTime, bool isSilent);
     void handleMarioMovement(Mario& mario, bool& isMarioLocked, char keyPressed, bool isSilent);
     void updateScore(Map& gameBoard, int score);

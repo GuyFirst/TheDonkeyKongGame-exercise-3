@@ -20,7 +20,7 @@
 //
 
 
-void Ghost::move(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isSilent) {
+void Ghost::move(std::vector<std::unique_ptr<Ghost>>& ghosts, bool isLoad, bool isSave, bool isSilent) {
     draw(map->originalMap[position.getY()][position.getX()], isLoad, isSave, isSilent);
     
         handleCollision(ghosts);
@@ -38,21 +38,20 @@ void Ghost::move(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isS
 }
 
 
-
-void Ghost::handleCollision(std::vector<Ghost*>& ghosts) {
+void Ghost::handleCollision(std::vector<std::unique_ptr<Ghost>>& ghosts) {
     for (auto& other : ghosts) {
         // Skip checking collision with itself
-        if (other == this) {
+        if (other.get() == this) {
             continue;
         }
-        
+
         if (this->isNearOtherGhosts(*other)) {
-                this->m_diff_x = -(this->m_diff_x);
-                other->m_diff_x = -(other->m_diff_x);
+            this->m_diff_x = -(this->m_diff_x);
+            other->m_diff_x = -(other->m_diff_x);
         }
-        
     }
 }
+
 
 
 

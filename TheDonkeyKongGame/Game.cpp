@@ -20,6 +20,7 @@
 #include "GameLoad.h"
 #include "GameSave.h"
 #include <typeinfo>
+#include <memory>
 
 
 void Game::run()
@@ -140,7 +141,6 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
     for (int i = index; i < fileNames.size(); i++) {
         ShowConsoleCursor(false);
         gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
-
         // Initialize game board and objects
         Map gameBoard = initializeGameBoard(fileNames[i], this->_isSilent);
         if (!gameBoard.isMapValid()) continue;
@@ -161,7 +161,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
         Mario mario(&gameBoard, gameBoard.getMarioStartPos());
         std::vector<Barrel> barrels = initializeBarrels(gameBoard);
-        std::vector<Ghost*> ghosts = initializeGhosts(gameBoard);
+        std::vector<std::unique_ptr<Ghost>> ghosts = initializeGhosts(gameBoard);
 
 
         int score = (int)gameConfig::Score::STARTING_SCORE;
@@ -224,8 +224,8 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             // Move barrels and ghosts
             moveBarrelsAndGhosts(barrels, ghosts, mario, this->_isLoad, this->_isSave, this->_isSilent);
 
-           // Sleep(this->_isSilent ? 0 : (this->_isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
-            Sleep((int)gameConfig::Sleep::GAME_LOOP_SLEEP-40);
+            Sleep(this->_isSilent ? 0 : (this->_isLoad ? 10 : (int)gameConfig::Sleep::GAME_LOOP_SLEEP));
+            
 
             // Toggle arrows every 4 seconds
             toggleArrowsEvery4Sec(gameBoard, togglePoints, lastToggleTime, this->_isSilent);
@@ -313,7 +313,23 @@ std::vector<Barrel> Game::initializeBarrels(Map& gameBoard) {
 
 
 
-std::vector<Ghost*> Game::initializeGhosts(Map& gameBoard) {
+
+std::vector<std::unique_ptr<Ghost>> Game::initializeGhosts(Map& gameBoard) {
+    std::vector<std::unique_ptr<Ghost>> ghosts;
+    for (const ghostType& ghost : gameBoard.getGhostType()) {
+        // Create Ghost or UniqueGhost based on 'me' value
+        if (ghost.me == 'x') {
+            ghosts.push_back(std::make_unique<Ghost>(&gameBoard, std::rand(), ghost.startPos, ghost.me));
+        }
+        else {
+            ghosts.push_back(std::make_unique<UniqueGhost>(&gameBoard, std::rand(), ghost.startPos, ghost.me));
+        }
+    }
+
+    return ghosts;
+}
+
+/*std::vector<Ghost*> Game::initializeGhosts(Map& gameBoard) {
 
     std::vector<Ghost*> ghosts;
     for (const ghostType& ghost : gameBoard.getGhostType()) {
@@ -329,7 +345,7 @@ std::vector<Ghost*> Game::initializeGhosts(Map& gameBoard) {
     }
 
     return ghosts;
-}
+}*/
 
 // Handle user input
 
@@ -365,7 +381,7 @@ void Game::handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard) {
 }
 
 // Move barrels and ghosts
-void Game::moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent) {
+void Game::moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<std::unique_ptr<Ghost>>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent) {
     moveBarrels(barrels, mario, isLoad, isSave, isSilent);
     moveGhosts(ghosts, isLoad, isSave, isSilent);
 }
@@ -448,7 +464,7 @@ void Game::drawMario(Mario& mario) {
 }
 
 
-bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& barrelCurr, int& barrelSpawnCounter, bool& isMarioLocked, std::vector<Ghost*>& ghosts, std::vector<Barrel>& barrels, int& score) {
+bool Game::handleLifeLoss(int& currLives, Mario& mario, Map& gameBoard, int& barrelCurr, int& barrelSpawnCounter, bool& isMarioLocked, std::vector<std::unique_ptr<Ghost>>& ghosts, std::vector<Barrel>& barrels, int& score) {
     if (currLives == mario.lives)
         return false;
     currLives--;
@@ -495,7 +511,7 @@ void Game::handleMarioLocked(char keyPressed, Mario& mario, bool& isMarioLocked)
         isMarioLocked = false;
     }
     else {
-        mario.move();
+        mario.move(gameConfig::eKeys::NONE, this->_isSilent);
     }
 }
 
@@ -550,14 +566,14 @@ void Game::loseALife() const
 
 
 
-void Game::moveGhosts(std::vector<Ghost*>& ghosts, bool isLoad, bool isSave, bool isSilent) {
+void Game::moveGhosts(std::vector<std::unique_ptr<Ghost>>& ghosts, bool isLoad, bool isSave, bool isSilent) {
     for (auto& ghost : ghosts) {
         
         (*ghost).move(ghosts, isLoad,  isSave, isSilent);
     }
 }
 
-void Game::resetGhosts(std::vector<Ghost*>& ghosts) {
+void Game::resetGhosts(std::vector<std::unique_ptr<Ghost>>& ghosts) {
     for (auto& ghost : ghosts) {
         (*ghost).reset();
     }
@@ -582,46 +598,43 @@ std::vector<Point> Game::defineFloorsToToggle(Map& map)
 
 
 
-void Game::patishDestroy(std::vector<Barrel>& barrels, std::vector<Ghost*>& ghosts, Mario& mario, char key, int& score, bool isSilent) {
+void Game::patishDestroy(std::vector<Barrel>& barrels, std::vector<std::unique_ptr<Ghost>>& ghosts, Mario& mario, char key, int& score, bool isSilent) {
     if (key == (char)gameConfig::eKeys::PATISH && mario.isWithPatish) {
         Point marioPos1 = mario.getPoint();
         Point marioPos2 = mario.getPoint();
         marioPos1.setX(marioPos1.getX() + 1);
-        marioPos2.setX(marioPos1.getX() - 1);
+        marioPos2.setX(marioPos2.getX() - 1);
 
-       
+        // Handle ghosts
         for (auto it = ghosts.begin(); it != ghosts.end(); ) {
-            Ghost* ghost = *it;  
-
-           
-            if (ghost->getPoint() == mario.getPoint() || ghost->getPoint() == marioPos1 || ghost->getPoint() == marioPos2) {
-                ghost->draw(' ', isSilent, isSilent, isSilent);  
-                it = ghosts.erase(it);  
-                score += (int)gameConfig::Score::GHOST_KILL;  
+            if ((*it)->getPoint() == mario.getPoint() || (*it)->getPoint() == marioPos1 || (*it)->getPoint() == marioPos2) {
+                (*it)->draw(' ', isSilent, isSilent, isSilent);
+                it = ghosts.erase(it);
+                score += (int)gameConfig::Score::GHOST_KILL;
             }
             else {
-                ++it; 
+                ++it;
             }
         }
 
-       
+        // Handle barrels
         for (auto it = barrels.begin(); it != barrels.end(); ) {
-            Barrel& barrel = *it;  
+            Barrel& barrel = *it;
 
-          
             if (barrel.getPoint() == mario.getPoint() || barrel.getPoint() == marioPos1 || barrel.getPoint() == marioPos2) {
-                barrel.draw(' ', isSilent, isSilent, isSilent); 
-                it = barrels.erase(it);  
-                Barrel::decrementBarrelCurr();  
-                Barrel::resetBarrelSpawnCounter();  
-                score += (int)gameConfig::Score::BARREL_KILL;  
+                barrel.draw(' ', isSilent, isSilent, isSilent);
+                it = barrels.erase(it);
+                Barrel::decrementBarrelCurr();
+                Barrel::resetBarrelSpawnCounter();
+                score += (int)gameConfig::Score::BARREL_KILL;
             }
             else {
-                ++it;  
+                ++it;
             }
         }
     }
 }
+
 
 
 void Game::updateClock(const std::chrono::seconds& elapsedTime)

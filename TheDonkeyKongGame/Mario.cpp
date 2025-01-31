@@ -56,7 +56,8 @@ bool Mario::checkForCollisions(int key, bool isSilent) {
     }
     if ((isBarrelHere() || isGhostHere()) && !(isWithPatish && key == 'p')) {
         lives--;
-        Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
+        if (!isSilent)
+             Sleep((int)gameConfig::Sleep::SCREEN_SLEEP);
         resetMario();
         return true;
     }
