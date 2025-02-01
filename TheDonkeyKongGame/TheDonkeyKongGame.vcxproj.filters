@@ -39,9 +39,6 @@
     <ClInclude Include="Barrel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="classTry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
