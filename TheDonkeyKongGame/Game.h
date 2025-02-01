@@ -65,8 +65,8 @@ public:
     void updateScore(Map& gameBoard, int score);
 
     // Virtual functions
-    virtual void handleDieResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood) = 0;
-    virtual void handlePaulineResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood) = 0;
+    virtual void handleDieResult(std::pair<size_t, Results::ResultValue>& res,Results& results, const int& iteration, std::string fileName, bool& isResultGood) = 0;
+    virtual void handlePaulineResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood) = 0;
     virtual char handleUserInput(Steps& steps, int iteration) = 0;
     virtual void handleStartOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) = 0;
     virtual void handleEndOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) = 0;

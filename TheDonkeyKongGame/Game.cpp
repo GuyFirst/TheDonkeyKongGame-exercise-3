@@ -185,7 +185,9 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
         srand(random_seed);
 
         size_t iteration = 0;
+        auto res = results.popResult();
         for (; true; iteration++) {
+
 
             char keyPressed = handleUserInput(steps, iteration);
 
@@ -201,7 +203,7 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
 
             if (handleLifeLoss(currLives, mario, gameBoard, Barrel::barrelCurr, Barrel::barrelSpawnCounter, isMarioLocked, ghosts, barrels, score)) {
                 if (_isLoad || _isSave)
-                         handleDieResult(results,iteration, fileNames[i], isResultGood );   
+                         handleDieResult(res, results,iteration, fileNames[i], isResultGood);   
                 if (currLives == 0)
                     break;
             }
@@ -210,12 +212,24 @@ int Game::startGame(std::vector<std::string> fileNames, int index) {
             if (mario.isNearPaulina())
             {
                 if (_isLoad || _isSave)
-                        handlePaulineResult(results, iteration, fileNames[i], isResultGood);
+                        handlePaulineResult(res, results, iteration, fileNames[i], isResultGood);
                 break;
             }
 
             if (!isResultGood)
                 break;
+
+            if (res.second == Results::NO_RESULT) {
+                reportResultError("Mario was suppose to win or lose but he was not.", fileNames[i], iteration);
+                isResultGood = false;
+                break;
+            }
+
+            
+
+
+            if (res.first == iteration)
+                res = results.popResult();
 
             // Handle barrel spawning
             handleBarrelSpawning(barrels, gameBoard);

@@ -10,8 +10,8 @@ public:
 	void setIsSilent(bool isSilentMode) {isSilent = isSilentMode;}
 	char handleUserInput(Steps& steps, int iteration);
 	bool isReleventKeyPressed(const char& key) override { return false; }
-	void handleDieResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood);
-	void handlePaulineResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood);
+	void handleDieResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood);
+	void handlePaulineResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood);
 	void moveToNextStage(int stageIndex, bool isResultGood) override {
 		clrsrc();
 		if (isResultGood)

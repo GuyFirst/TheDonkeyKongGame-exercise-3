@@ -12,8 +12,8 @@ public:
 	char handleUserInput(Steps& steps, int iteration) override;
 	bool  isReallyDied(const Results& results, const int& iteration) const { return true; }
 	bool  isReallyReachedPauline(const Results& results, const int& iteration) const { return true; }
-	 void handleDieResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood);
-	 void handlePaulineResult(Results& results, const int& iteration, std::string fileName, bool& isResultGood);
+	 void handleDieResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood);
+	 void handlePaulineResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood);
 	 virtual void setRandomSeed(long& random_seed, Steps& steps) override { steps.setRandomSeed(random_seed); }
 	 virtual void handleEndOfGameLoop(Results& results, Steps& steps, std::string resultsFileName, std::string stepsFileName) override {
 		 results.saveResults(resultsFileName);
