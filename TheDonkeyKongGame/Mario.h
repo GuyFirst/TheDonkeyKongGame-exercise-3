@@ -8,10 +8,10 @@
 class Mario : public Entity {
 public:
     
-    Mario(Map* map, Point startingPoint)
+    Mario(Map* map, Point startingPoint, int lives)
         : Entity(startingPoint, '@',
            (int)gameConfig::Direction::STAY, (int)gameConfig::Direction::STAY, map),
-        isWithPatish(false) {
+        isWithPatish(false), lives(lives) {
     }  
 	State getState() const     { return state; }
     bool isNearPaulina() const { return map->currentMap[position.getY()][position.getX() + m_diff_x] == '$'; }

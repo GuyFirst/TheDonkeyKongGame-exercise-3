@@ -60,7 +60,7 @@ public:
     bool handlePatishInteraction(Mario& mario, bool& patishPicked, Map& gameBoard);
     void handleBarrelSpawning(std::vector<Barrel>& barrels, Map& gameBoard);
     void moveBarrelsAndGhosts(std::vector<Barrel>& barrels, std::vector<std::unique_ptr<Ghost>>& ghosts, Mario& mario, bool isLoad, bool isSave, bool isSilent);
-    void toggleArrowsEvery4Sec(Map& gameBoard, std::vector<Point>& togglePoints, std::chrono::steady_clock::time_point& lastToggleTime, bool isSilent);
+    void toggleArrowsEvery13Iterations(Map& gameBoard, std::vector<Point>& togglePoints, size_t& iteration);
     void handleMarioMovement(Mario& mario, bool& isMarioLocked, char keyPressed, bool isSilent);
     void updateScore(Map& gameBoard, int score);
 
