@@ -64,7 +64,6 @@ enum class DURATION_IN_MILLISECONDS {
 	
 };
 
-
 Note donkeyStartTheme[] = {
    {  static_cast<DWORD>(NOTES::C3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::DOTTED_QUARTER_NOTE) },
    {  static_cast<DWORD>(NOTES::D3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::EIGHTH_NOTE) },
@@ -79,7 +78,6 @@ Note donkeyStartTheme[] = {
    {  static_cast<DWORD>(NOTES::G3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::SIXTEENTH_NOTE) },
    {  static_cast<DWORD>(NOTES::FSharp3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::SIXTEENTH_NOTE) },
    {  static_cast<DWORD>(NOTES::G3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::WHOLE_NOTE) },
-
 };
 
 Note donkeyHowHighCanYouGet[] = {
@@ -146,9 +144,7 @@ Note marioTheme[] = {
     { static_cast<DWORD>(NOTES::BREAK), static_cast<DWORD>(DURATION_IN_MILLISECONDS::EIGHTH_NOTE) },
     { static_cast<DWORD>(NOTES::C3), static_cast<DWORD>(DURATION_IN_MILLISECONDS::WHOLE_NOTE) },
      
-
 };
-
 void playDonkeyStartTheme() {
     clrsrc();
     gotoxy(gameConfig::GAME_WIDTH / 3, gameConfig::GAME_HEIGHT / 2);
