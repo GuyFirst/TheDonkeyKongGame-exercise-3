@@ -27,6 +27,8 @@ The game was broken down into distinct classes such as:
 - **C++** (Standard Libraries only)
 - ASCII graphics via standard console output
 - OOP principles for scalable design
+- Visual Studio as IDE
+- Git Extensions to help with Version Control
 
 ## 📚 Key Takeaways
 
