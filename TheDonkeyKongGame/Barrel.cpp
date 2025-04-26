@@ -4,7 +4,6 @@
 #include "Point.h"
 
 int Barrel::barrelCurr = 0;
-
 int Barrel::barrelSpawnCounter = 0;
 
 void Barrel::move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent) {
