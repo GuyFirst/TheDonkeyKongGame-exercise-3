@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Point.h"
 #include "Map.h"
 #include "gameConfig.h"
@@ -7,13 +6,13 @@
 
 class Mario : public Entity {
 public:
-    
     Mario(Map* map, Point startingPoint, int lives)
         : Entity(startingPoint, '@',
            (int)gameConfig::Direction::STAY, (int)gameConfig::Direction::STAY, map),
         isWithPatish(false), lives(lives) {
     }  
-	State getState() const     { return state; }
+
+    State getState() const     { return state; }
     bool isNearPaulina() const { return map->currentMap[position.getY()][position.getX() + m_diff_x] == '$'; }
     char getMapChar() const    { return map->originalMap[position.getY()][position.getX()]; }
     bool isBarrelHere() const  { return map->currentMap[position.getY()][position.getX()] == 'O'; }
@@ -57,7 +56,6 @@ private:
                                                map->currentMap[position.getY() - 1][position.getX()] != 'p';
     }
     void checkFallHeight() { if (m_countHeight >= 5) { lives--; } }
-
 	friend class Game; //the game has the ability to change the mario's state
 };
 
