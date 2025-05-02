@@ -55,14 +55,12 @@ char Map::chooseScreens(std::vector<std::string> vec_to_fill) const
     while (true)
         if (_kbhit()){
              key = _getch();
-			 if ((key >= '1') && (key < '0' + num))
-                 return key;
-             else
-				 continue;
+		 if ((key >= '1') && (key < '0' + num))
+                    return key;
+                 else
+		    continue;
 }
-    
-
-    
+       
 }
 
 void Map::printLegend( int remainingLives) const
