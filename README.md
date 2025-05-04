@@ -32,6 +32,7 @@ The game was broken down into distinct classes such as:
 - Visual Studio as IDE
 - Git Extensions to help with Version Control
 
+
 ## 📚 Key Takeaways
 
 This project helped me:
