@@ -23,6 +23,7 @@ The game was broken down into distinct classes such as:
 - `Player`, `DonkeyKong`, `Barrel` – Derived classes with specialized behavior
 - `Map` – Handles level layout and rendering
 
+
 ## 🛠 Technologies Used
 
 - **C++** (Standard Libraries only)
