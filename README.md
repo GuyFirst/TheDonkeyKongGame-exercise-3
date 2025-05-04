@@ -14,6 +14,7 @@ This project was a deep dive into fundamental **OOP concepts** in C++:
 - **Polymorphism**: Allowed flexibility and scalability in object interactions, like different types of moving entities.
 - **Modularity**: Designed clean, reusable, and maintainable components for rendering, input handling, and game mechanics.
 
+
 ## 🧱 Structure
 
 The game was broken down into distinct classes such as:
