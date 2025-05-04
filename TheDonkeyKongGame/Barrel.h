@@ -10,8 +10,6 @@ class Barrel : public Entity {
     int m_prev_diff_x = 0;
     int m_fallCounter = 0;
 
- 
-
     // Helper methods
     void updatePosition();
     void handleExplosion(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent);
