@@ -42,12 +42,11 @@ public:
     static int getBarrelSpawnCounter() { return barrelSpawnCounter; }
 
     static void incrementBarrelCurr() {barrelCurr++; }
-	static void decrementBarrelCurr() { barrelCurr--; }
+    static void decrementBarrelCurr() { barrelCurr--; }
     static void resetBarrelSpawnCounter() { barrelSpawnCounter = 0; }
 
     bool operator==(const Barrel& other) const { return position == other.position; }
-
-	bool operator!=(const Barrel& other) const {return !(*this == other);}
+    bool operator!=(const Barrel& other) const {return !(*this == other);}
 
     char getMapChar() const { return this->getMap()->originalMap[position.getY()][position.getX()]; }
 };
