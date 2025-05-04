@@ -5,9 +5,11 @@
 
 
 
-char GameSave::handleUserInput(Steps& steps, int iteration) {
+char GameSave::handleUserInput(Steps& steps, int iteration)
+{
     char keyPressed = (int)gameConfig::eKeys::NONE;
-    if (_kbhit()) {
+    if (_kbhit()) 
+    {
         keyPressed = std::tolower(_getch());
     }
     return keyPressed;
