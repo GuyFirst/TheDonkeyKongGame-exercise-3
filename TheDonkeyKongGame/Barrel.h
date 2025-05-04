@@ -29,12 +29,9 @@ public:
     static int barrelSpawnCounter;
 
     Barrel(Map* map, Point startingPosition)
-        : Entity(startingPosition, 'O', (int)gameConfig::Direction::POSITIVE, (int)gameConfig::Direction::STAY, map) {
-    }
+        : Entity(startingPosition, 'O', (int)gameConfig::Direction::POSITIVE, (int)gameConfig::Direction::STAY, map) {}
 
-    Barrel() : Entity(Point(0, 0), 'O', (int)gameConfig::Direction::POSITIVE, (int)gameConfig::Direction::STAY, nullptr) {
-    }
-
+    Barrel() : Entity(Point(0, 0), 'O', (int)gameConfig::Direction::POSITIVE, (int)gameConfig::Direction::STAY, nullptr) {}
 
     void move(std::vector<Barrel>& barrels,Mario* mario, bool isLoad, bool isSave, bool isSilent);
     void reset();
