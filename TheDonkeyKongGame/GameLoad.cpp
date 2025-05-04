@@ -18,21 +18,23 @@ void GameLoad::handleDieResult(std::pair<size_t, Results::ResultValue>& res, Res
 	{
 		reportResultError("Mario is dead altough he was not suppose to be", fileName, iteration);
 		isResultGood = false;
-    }
+        }
 	
 }
 
 
 void GameLoad::handlePaulineResult(std::pair<size_t, Results::ResultValue>& res, Results& results, const int& iteration, std::string fileName, bool& isResultGood)
 {
-	if (res != std::pair{ iteration, Results::REACH_PAULIN }) {
+	if (res != std::pair{ iteration, Results::REACH_PAULIN })
+	{
 		reportResultError("Mario is near Pauline altough he was not suppose to be there", fileName, iteration);
 		isResultGood = false;
 	}
 }
 
 bool GameLoad::checkMissingFiles(const std::string& filename, const std::string& stepsFilename, const std::string& resultsFilename) {
-	if (!std::filesystem::exists(stepsFilename) || !std::filesystem::exists(resultsFilename)) {
+	if (!std::filesystem::exists(stepsFilename) || !std::filesystem::exists(resultsFilename))
+	{
 		std::cout << "Missing files for screen: " << filename << std::endl;
 		std::cout << "Moving to the next screen recording..." << std::endl;
 		return true;
